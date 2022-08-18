@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Boiler Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <script src="scripts/jquery-1.9.1.min.js"></script>
+    <script src="scripts/chromeFileProtocolFix.js"></script>
+    <script src="scripts/jquery.mobile-1.3.1.min.js"></script>
+</head>
+<body>
+
+    <!--Login Page-->
+    <div data-role="page" id="pageHome">
+        <div data-role="header">
+            <h1>Boiler Monitor</h1>
+        </div>
+        <div data-role="content"></div>
+        Password:
+        <input type="password" id="passcode">
+        <div data-role="controlgroup" id="numPad">
+            <a data-role="button" id="btnEnter" type="submit">Enter</a>
+        </div>
+        <div data-role="controlgroup" data-type="horizontal" style="text-align: center;">
+            <a data-role="button" onclick="addValueToPassword(7)">7</a>
+            <a data-role="button" onclick="addValueToPassword(8)">8</a>
+            <a data-role="button" onclick="addValueToPassword(9)">9</a>
+        </div>
+        <div data-role="controlgroup" data-type="horizontal" style="text-align: center;">
+            <a data-role="button" onclick="addValueToPassword(4)">4</a>
+            <a data-role="button" onclick="addValueToPassword(5)">5</a>
+            <a data-role="button" onclick="addValueToPassword(6)">6</a>
+        </div>
+        <div data-role="controlgroup" data-type="horizontal" style="text-align: center;">
+            <a data-role="button" onclick="addValueToPassword(1)">1</a>
+            <a data-role="button" onclick="addValueToPassword(2)">2</a>
+            <a data-role="button" onclick="addValueToPassword(3)">3</a>
+        </div>
+        <div data-role="controlgroup" data-type="horizontal" style="text-align: center;">
+            <a data-role="button" onclick="addValueToPassword(0)">0</a>
+            <a data-role="button" onclick="addValueToPassword('bksp')" data-icon="delete">del</a>
+        </div>
+    </div>
+
+    <!--Boiler Info Page-->
+    <div data-role="page" id="pageBoilerInfo">
+        <!--Header-->
+        <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+            <h1>Boiler Information</h1>
+        </div>
+        <!--User Form-->
+        <div data-role="content">
+            <form id="frmUserForm" action="">
+                <div data-role="fieldcontain">
+                    <label for="boilerID">Boiler ID: </label>
+                    <input type="text" placeholder="Boiler ID" name="boilerID" data-mini="false" id="boilerID" value="" required>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="datePurch">Date Purchased: </label>
+                    <input type="date" name="datePurch" data-mini="false" id="datePurch" value="" required>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="maxPressure" class="select">Maximum Pressure: </label>
+                    <select name="maxPressure" id="maxPressure" data-mini="false" data-native-menu="false" required>
+                        <option>Select Max Pressure</option>
+                        <option value="Big">Big Pressure: 100+ psi</option>
+                        <option value="Med">Mid Pressure: Up to 99 psi</option>
+                        <option value="Low">Small Pressure up to 49 psi</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="maxTemp" class="select">Maximum Temperature: </label>
+                    <select name="maxTemp" id="maxTemp" data-mini="false" data-native-menu="false" required>
+                        <option>Select Max Temperature</option>
+                        <option value="Super">Super Hot: 400-450 &#8457;</option>
+                        <option value="Hot">Hot Hot: 200-300 &#8457;</option>
+                        <option value="Lukewarm">Lukewarm: 100-150 &#8457;</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="changePassword">Edit Password: </label>
+                    <input type="password" placeholder="New Password" name="changePassword" data-mini="false" id="changePassword" value="" required>
+                </div>
+                <input type="submit" id="btnUserUpdate" data-icon="check" data-iconpos="left" value="Update" data-inline="true">
+            </form>
+        </div>
+    </div>
+
+    <!--Menu Page-->
+    <div data-role="page" id="pageMenu">
+        <!--Header-->
+        <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+            <h1>Boiler Monitor Menu</h1>
+        </div>
+        <!--Menu Buttons-->
+        <div data-role="content">
+            <div data-role="controlgroup">
+                <a href="#pageBoilerInfo" data-role="button">Boiler Info</a>
+                <a href="#pageRecords" data-role="button">Records</a>
+                <a href="#pageGraph" data-role="button">Graph</a>
+                <a href="#pageAdvice" data-role="button">Recommendations</a>
+            </div>
+        </div>
+    </div>
+
+    <!--Records Page-->
+    <div data-role="page" id="pageRecords">
+        <!--Header-->
+        <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+            <h1>Records</h1>
+        </div>
+        <!--Boiler Records-->
+        <div data-role="content">
+            <div data-role="fieldcontain" id="divUserSection">
+            </div>
+            <h3 align="center">History</h3>
+            <div data-role="fieldcontain">
+                <table id="tblRecords" class="ui-responsive table-stroke">
+                </table>
+            </div>
+            <div data-role="fieldcontain">
+                <a href="#pageNewRecordForm" id="btnAddRecord" data-role="button" data-icon="plus">Add New Entry</a>
+                <a href="#" data-role="button" id="btnClearHistory" data-icon="delete">Clear History</a>
+            </div>
+        </div>
+    </div>
+
+<!-- New Record Form page -->
+<div data-role="page" id="pageNewRecordForm">
+    <div data-role="header">
+        <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+            <h1>New Record</h1>
+        </div>
+    </div>
+    <div data-role="content">
+      <form id="frmNewRecordForm" action="">
+        <div data-role="fieldcontain">
+          <div data-role="fieldcontain">
+            <label for="recordDate">Date: </label>
+            <input type="date" name="recordDate" data-mini="false" id="recordDate" value="">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="recordPressure">Pressure: </label>
+            <input type="number" step="0.5" placeholder="0" name="recordPressure" data-mini="false" id="recordPressure" value="">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="recordTemp">Temperature: </label>
+            <input type="number" step="0.5" placeholder="0" name="recordTemp" data-mini="false" id="recordTemp" value="">
+          </div>
+        </div>
+        <input type="submit" id="btnSubmitRecord" value="">
+      </form>
+    </div>
+  </div>
+
+    <!--Graph Page-->
+    <div data-role="page" id="pageGraph">
+        <!--Header-->
+        <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars"
+               data-iconpos="left" data-inline="true">Menu</a>
+            <h1>Graph</h1>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title">TSH vs Date</h3>
+            </div>
+            <div class="panel-body">
+              <canvas id="GraphCanvas" width="500" height="500" style="border:1px solid #000000;">
+              </canvas>
+            </div>
+        </div>
+    </div>
+
+    <!--Recommendations Page-->
+    <div data-role="page" id="pageAdvice">
+        <!--Header-->
+        <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars"
+               data-iconpos="left" data-inline="true">Menu</a>
+            <h1>Recommendations</h1>
+        </div>
+        <div data-role="content">
+            <canvas id="AdviceCanvas" width="550" height="550" style="border:1px solid #000000;">
+            </canvas>
+        </div>
+    </div>
+
+    <!--forms and navigation-->
+    <script src="scripts/userForm.js"></script>
+    <script src="scripts/pageLoader.js"></script>
+    <script src="scripts/navigation.js"></script>
+    <script src="scripts/records.js"></script>
+    <script src="scripts/advice.js"></script>
+
+    <!--RGraph scripts-->
+    <script src="scripts/RGraph.common.core.js"></script>
+    <script src="scripts/RGraph.common.effects.js"></script>
+    <script src="scripts/RGraph.line.js"></script>
+    <script src="scripts/RGraph.cornergauge.js"></script>
+    <script src="scripts/RGraph.hprogress.js"></script>
+</body>
+</html>
